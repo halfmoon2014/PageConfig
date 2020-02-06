@@ -9,7 +9,7 @@
             margin: 0;
         }
 
-        .div1 {
+        #tools {
             margin: 0 20px;
             float: left;
             width: 200px;
@@ -17,12 +17,17 @@
             border: 1px solid #000;
         }
 
-        .div2 {
+        #workspace {
             position: relative;
             margin: 0 20px;
             float: left;
             width: 1024px;
             height: 800px;
+            border: 1px solid #000;
+        }
+        #titles{    
+             margin: 0 20px;     
+            height: 100px;
             border: 1px solid #000;
         }
 
@@ -38,63 +43,35 @@
             align-items: center
         }*/
 
-        .p1 {
-            width: 50px;
-            background-color: pink;
-            margin: 5px 0;
-        }
-
-        .p2 {
-            width: 80px;
-            background-color: burlywood;
-            margin: 5px 0;
-        }
+         
 
         .p3 {
             width: 110px;
             background-color: rgb(133, 88, 29);
-            margin: 5px 0;
-            cursor: move;
+            margin: 5px 0;          
         }
-
-        .p4 {
-            width: 140px;
-            background-color: rgb(172, 37, 48);
-            margin: 5px 0;
+        #abid1{
+            position:absolute;top:30px;left:30px;
         }
-
-        .p5 {
-            width: 170px;
-            background-color: rgb(17, 182, 31);
-            margin: 5px 0;
+         #div2_1{
+            width:200px;height:30px;background-color:rebeccapurple; margin: 5px 0;
         }
-
-        .p6 {
-            width: 200px;
-            background-color: rgb(90, 33, 155);
-            margin: 5px 0;
-        }
+       
     </style>
 </head>
 <body>
-    <div>
-        <div id="div1" class="div1">
+    <div id="worker">
+        <div id="titles">titles</div>
+        <div id="tools">
             <!-- 在h5中，如果想拖拽元素，就必须为元素添加draggable="true"。图片和超链接默认就可以拖拽 -->
-            <p id="pe3" class="p3" draggable="true">3</p>
-            <p id="pe2" class="p2" draggable="true">2</p>
-            <p id="pe5" class="p5" draggable="true">
-                5
-            </p>
-
-            <p id="pe1" class="p1" draggable="true">1</p>
-            <p id="pe6" class="p6" draggable="true">6</p>
-            <p id="pe4" class="p4" draggable="true">4</p>
-            <div id="div2_1" draggable="true" style="width:200px;height:30px;background-color:rebeccapurple; margin: 5px 0;">
+            <p id="pe3" class="p3">3</p>           
+            <div id="div2_1">
             </div>
-            <label id="label1" draggable="true">label1</label>
+            <label id="label1">label1</label>
         </div>
-        <div id="div2" class="div2">
-            <div style="position:absolute;top:30px;left:30px;" draggable="true" id="abid1">test</div>
+        <div id="workspace">
+            <p id="pe3333" class="p3">3</p>    
+            <div draggable="true" id="abid1">test</div>
         </div>
 
 
@@ -106,60 +83,128 @@
             <tr><td>123</td><td>123</td><td>123</td></tr>
         </table>
     </div>
-    <script>
-        /* 拖拽元素支持的事件
-            ondrag 应用于拖拽元素，整个拖拽过程都会调用
-            ondragstart 应用于拖拽元素，当拖拽开始时调用
-            ondragleave 应用于拖拽元素，当鼠标离开拖拽元素是调用
-            ondragend 应用于拖拽元素，当拖拽结束时调用
+    <script type="text/javascript">
+        window.onload = function () {
+            SetDragable.initMoveObj(document.getElementById("workspace"));
+            SetDragable.initDrgObj(document.getElementById("pe3"));
+            SetDragable.initDrgObj(document.getElementById("div2_1"));
+            SetDragable.initDrgObj(document.getElementById("label1"));
+        };
+        var SetDragable = (function () {
+            /* 拖拽元素支持的事件
+                 ondrag 应用于拖拽元素，整个拖拽过程都会调用
+                 ondragstart 应用于拖拽元素，当拖拽开始时调用
+                 ondragleave 应用于拖拽元素，当鼠标离开拖拽元素是调用
+                 ondragend 应用于拖拽元素，当拖拽结束时调用
 
-            目标元素支持的事件
-            ondragenter 应用于目标元素，当拖拽元素进入时调用
-            ondragover 应用于目标元素，当停留在目标元素上时调用
-            ondrop 应用于目标元素，当在目标元素上松开鼠标时调用
-            ondragleave 应用于目标元素，当鼠标离开目标元素时调用
-        */
+                 目标元素支持的事件
+                 ondragenter 应用于目标元素，当拖拽元素进入时调用
+                 ondragover 应用于目标元素，当停留在目标元素上时调用
+                 ondrop 应用于目标元素，当在目标元素上松开鼠标时调用
+                 ondragleave 应用于目标元素，当鼠标离开目标元素时调用
+             */
 
-        // var obj = null; /* 当前被拖拽的值*/
+            var dragstart = function (e) {
+                /*通过dataTransfer来实现数据的存储与获取
+                    setData(format, data)
+                    format: 数据的类型： text/html  text/uri-list
+                    Data: 数据： 一般来说是字符串值
+                */
+                // e.dataTransfer.setData("Text", e.target.id);
+                e.target.style.opacity = 0.5             
+                e.dataTransfer.setData("text", e.target.id );              
+                console.log(e.target.id + "ondragstart")
+            }
 
-        document.ondragstart = function (e) {
-            /*通过dataTransfer来实现数据的存储与获取
-                setData(format, data)
-                format: 数据的类型： text/html  text/uri-list
-                Data: 数据： 一般来说是字符串值
-            */
-            // e.dataTransfer.setData("Text", e.target.id);
-            e.target.style.opacity = 0.5
-            e.dataTransfer.setData("text", e.target.id);
-            let off = { x: e.x - getLeft(moveObj), y: e.y - getTop(moveObj) };
-            console.log(e.target.id + "ondragstart")
-        }
+            var dragend = function (e) {
+                e.target.style.opacity = 1;            
+                console.log(e.target.id + "ondragend")
+            }
 
-        document.ondragend = function (e) {
-            e.target.style.opacity = 1;
-            console.log(e.target.id + "ondragend")
-        }
+            /*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
+            var dragover = function (e) {
+                console.log(e.target.id + "ondragover")
+                e.preventDefault();
+            }
 
-        /*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
-        document.ondragover = function (e) {
-            console.log(e.target.id + "ondragover")
-            e.preventDefault();
-        }
+            var drop = function (e) {
+                /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
+                var data = e.dataTransfer.getData("text")
+                //e.target.appendChild(document.getElementById(data));
+                var sourceNode = document.getElementById(data); // 获得被克隆的节点对象
+                var clonedNode = sourceNode.cloneNode(true); // 克隆节点
+                clonedNode.style.opacity = 1
+                var newid=uuid();
+                clonedNode.setAttribute("id", newid); // 修改一下id 值，避免id 重复
+                clonedNode.style.position = "absolute";
+                clonedNode.style.top = (e.offsetY- event.target.offsetTop)+"px"
+                clonedNode.style.left = (e.offsetX - event.target.offsetLeft) + "px"
+                e.target.appendChild(clonedNode);                
+                console.log(e.target.id + "ondrop")
+            }
+            var initMoveObj = function (moveObj) {
+                moveObj.addEventListener("dragover", dragover, true);
+                moveObj.addEventListener("drop", drop, true);
+            }
 
-        document.ondrop = function (e) {            
-            /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
-            var data = e.dataTransfer.getData("text");
-            //e.target.appendChild(document.getElementById(data));
+            var initDrgObj = function (drgObj) {
+                drgObj.draggable = true;
+                drgObj.style.cursor = "move";
+                //监听拖动事件
+                drgObj.addEventListener("dragstart", dragstart, true);
+                drgObj.addEventListener("dragend", dragend, true);
+            }
+            return {
+                initMoveObj: initMoveObj,
+                initDrgObj: initDrgObj
+            };
+        })();
 
-            var sourceNode = document.getElementById(data); // 获得被克隆的节点对象
-            var clonedNode = sourceNode.cloneNode(true); // 克隆节点
-            clonedNode.style.opacity = 1
-            clonedNode.setAttribute("id", uuid()); // 修改一下id 值，避免id 重复
-            clonedNode.style.position = "absolute";
-            e.target.appendChild(clonedNode);
 
-            console.log(e.target.id + "ondrop")
-        }
+ 
+        //document.ondragstart = function (e) {
+        //    /*通过dataTransfer来实现数据的存储与获取
+        //        setData(format, data)
+        //        format: 数据的类型： text/html  text/uri-list
+        //        Data: 数据： 一般来说是字符串值
+        //    */
+        //    // e.dataTransfer.setData("Text", e.target.id);
+        //    e.target.style.opacity = 0.5
+        //    e.dataTransfer.setData("text", e.target.id);
+        //    //let off = { x: e.x - getLeft(e.target), y: e.y - getTop(e.target) };
+        //    console.log(e.target.id + "ondragstart")
+        //}
+
+        //document.ondragend = function (e) {
+        //    e.target.style.opacity = 1;
+        //    //let off = moveObj.dragOff;
+        //    //moveObj.style.top = e.y - off.y + "px";
+        //    //moveObj.style.left = e.x - off.x + "px";
+        //    console.log(e.target.id + "ondragend")
+        //}
+
+        ///*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
+        //document.ondragover = function (e) {
+        //    console.log(e.target.id + "ondragover")
+        //    e.preventDefault();
+        //}
+
+        //document.ondrop = function (e) {
+        //    /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
+        //    var data = e.dataTransfer.getData("text");
+        //    //e.target.appendChild(document.getElementById(data));
+
+        //    var sourceNode = document.getElementById(data); // 获得被克隆的节点对象
+        //    var clonedNode = sourceNode.cloneNode(true); // 克隆节点
+        //    clonedNode.style.opacity = 1
+        //    clonedNode.setAttribute("id", uuid()); // 修改一下id 值，避免id 重复
+        //    clonedNode.style.position = "absolute";
+        //    clonedNode.style.top = "10px;"
+        //    clonedNode.style.left = "10px;"
+        //    e.target.appendChild(clonedNode);
+
+        //    console.log(e.target.id + "ondrop")
+        //}
 
         function getTop(e) {
             var offset = e.offsetTop;
