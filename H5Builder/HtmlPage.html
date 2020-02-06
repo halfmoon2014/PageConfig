@@ -4,75 +4,76 @@
     <meta charset="utf-8" />
     <title></title>
     <style>
-            * {
-                padding: 0;
-                margin: 0;
-            }
+        * {
+            padding: 0;
+            margin: 0;
+        }
 
-            .div1 {
-                margin: 0 20px;
-                float: left;
-                width: 200px;
-                height: 800px;
-                border: 1px solid #000;
-            }
+        .div1 {
+            margin: 0 20px;
+            float: left;
+            width: 200px;
+            height: 800px;
+            border: 1px solid #000;
+        }
 
-            .div2 {
-                position:relative;
-                margin: 0 20px;
-                float: left;
-                width: 1024px;
-                height: 800px;
-                border: 1px solid #000;
-            }
+        .div2 {
+            position: relative;
+            margin: 0 20px;
+            float: left;
+            width: 1024px;
+            height: 800px;
+            border: 1px solid #000;
+        }
 
-            /*div {
+        /*div {
             display: flex;
             flex-direction: column;
             align-items: center
         }*/
 
-            /*p {
+        /*p {
             display: flex;
             flex-direction: column;
             align-items: center
         }*/
 
-            .p1 {
-                width: 50px;
-                background-color: pink;
-                margin: 5px 0;
-            }
+        .p1 {
+            width: 50px;
+            background-color: pink;
+            margin: 5px 0;
+        }
 
-            .p2 {
-                width: 80px;
-                background-color: burlywood;
-                margin: 5px 0;
-            }
+        .p2 {
+            width: 80px;
+            background-color: burlywood;
+            margin: 5px 0;
+        }
 
-            .p3 {
-                width: 110px;
-                background-color: rgb(133, 88, 29);
-                margin: 5px 0;
-            }
+        .p3 {
+            width: 110px;
+            background-color: rgb(133, 88, 29);
+            margin: 5px 0;
+            cursor: move;
+        }
 
-            .p4 {
-                width: 140px;
-                background-color: rgb(172, 37, 48);
-                margin: 5px 0;
-            }
+        .p4 {
+            width: 140px;
+            background-color: rgb(172, 37, 48);
+            margin: 5px 0;
+        }
 
-            .p5 {
-                width: 170px;
-                background-color: rgb(17, 182, 31);
-                margin: 5px 0;
-            }
+        .p5 {
+            width: 170px;
+            background-color: rgb(17, 182, 31);
+            margin: 5px 0;
+        }
 
-            .p6 {
-                width: 200px;
-                background-color: rgb(90, 33, 155);
-                margin: 5px 0;
-            }
+        .p6 {
+            width: 200px;
+            background-color: rgb(90, 33, 155);
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -130,6 +131,7 @@
             // e.dataTransfer.setData("Text", e.target.id);
             e.target.style.opacity = 0.5
             e.dataTransfer.setData("text", e.target.id);
+            let off = { x: e.x - getLeft(moveObj), y: e.y - getTop(moveObj) };
             console.log(e.target.id + "ondragstart")
         }
 
@@ -144,20 +146,33 @@
             e.preventDefault();
         }
 
-        document.ondrop = function (e) {
-            e.preventDefault();
+        document.ondrop = function (e) {            
             /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
             var data = e.dataTransfer.getData("text");
             //e.target.appendChild(document.getElementById(data));
-            
-            var sourceNode = document.getElementById(data); // 获得被克隆的节点对象   
-            var clonedNode = sourceNode.cloneNode(true); // 克隆节点   
+
+            var sourceNode = document.getElementById(data); // 获得被克隆的节点对象
+            var clonedNode = sourceNode.cloneNode(true); // 克隆节点
             clonedNode.style.opacity = 1
-            clonedNode.setAttribute("id",  uuid()); // 修改一下id 值，避免id 重复 
+            clonedNode.setAttribute("id", uuid()); // 修改一下id 值，避免id 重复
+            clonedNode.style.position = "absolute";
             e.target.appendChild(clonedNode);
 
             console.log(e.target.id + "ondrop")
         }
+
+        function getTop(e) {
+            var offset = e.offsetTop;
+            if (e.offsetParent != null) offset += getTop(e.offsetParent);
+            return offset;
+        }
+        //获取元素的横坐标,距离文档左边的宽度
+        function getLeft(e) {
+            var offset = e.offsetLeft;
+            if (e.offsetParent != null) offset += getLeft(e.offsetParent);
+            return offset;
+        }
+
         function uuid() {
             var s = [];
             var hexDigits = "0123456789abcdef";

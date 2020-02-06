@@ -54,6 +54,7 @@
                 width: 110px;
                 background-color: rgb(133, 88, 29);
                 margin: 5px 0;
+                
             }
 
             .p4 {
@@ -76,7 +77,7 @@
     </style>
 </head>
 <body>
-    <div>
+    <div id="contanin">
         <div id="div1" class="div1">
             <!-- 在h5中，如果想拖拽元素，就必须为元素添加draggable="true"。图片和超链接默认就可以拖拽 -->
             <p id="pe3" class="p3" >3</p>
@@ -107,7 +108,7 @@
     </div>
     <script>
         window.onload = function () {
-            setDragable(document.getElementById("p3"), document.getElementById("div2"))
+            setDragable(document.getElementById("pe3"), document.getElementById("contanin"))
         }
         function setDragable(drg, mov) {
             let drgObj = drg;
