@@ -19,14 +19,15 @@
 
         #workspace {
             position: relative;
-            margin: 0 20px;
+            /*margin: 0 20px;*/
             float: left;
             width: 1024px;
             height: 800px;
             border: 1px solid #000;
         }
-        #titles{    
-             margin: 0 20px;     
+
+        #titles {
+            margin: 0 20px;
             height: 100px;
             border: 1px solid #000;
         }
@@ -43,20 +44,54 @@
             align-items: center
         }*/
 
-         
-
-        .p3 {
+        .pe3333 {
             width: 110px;
             background-color: rgb(133, 88, 29);
-            margin: 5px 0;          
         }
-        #abid1{
-            position:absolute;top:30px;left:30px;
+
+        .toolsLabelCss {
+            height: 26px;
+            width: 80px;
+            background-color: rgb(133, 88, 29);
         }
-         #div2_1{
-            width:200px;height:30px;background-color:rebeccapurple; margin: 5px 0;
+
+        .toolsTextCss {
+            height: 26px;    
+            background-color: rgb(133, 88, 29);
+            width:120px;
         }
-       
+        .toolsTextCss label{
+             width: 60px;
+             display:inline-block;
+        }
+        .toolsTextCss span{
+             width: 60px;display:inline-block;
+        }
+
+        .toolsSelectCss {
+            height: 26px;
+            width: 120px;
+            background-color: rgb(133, 88, 29);
+        }
+
+        .tools_p {
+            width: 110px;
+            background-color: rgb(133, 88, 29);
+            margin: 5px 0;
+        }
+
+        #abid1 {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .div2_1 {
+            width: 200px;
+            height: 30px;
+            background-color: rebeccapurple;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -64,32 +99,77 @@
         <div id="titles">titles</div>
         <div id="tools">
             <!-- 在h5中，如果想拖拽元素，就必须为元素添加draggable="true"。图片和超链接默认就可以拖拽 -->
-            <p id="pe3" class="p3">3</p>           
-            <div id="div2_1">
-            </div>
-            <label id="label1">label1</label>
+
+            <p style="margin-top:10px;">
+                <div id="toolsLabel" class="toolsLabelCss" ctr="label">label</div>
+            </p>
+            <p style="margin-top:10px;">
+                <div id="toolsText" class="toolsTextCss" ctr="text">
+                    <label ctr="toolsTextLabel">label</label><span ctr="toolsTextText">文本框</span>
+                </div>
+            </p>
+            <p style="margin-top:10px;">
+                <div id="toolsSelect" class="toolsSelectCss" ctr="select">label下拉框</div>
+            </p>
         </div>
         <div id="workspace">
-            <p id="pe3333" class="p3">3</p>    
-            <div draggable="true" id="abid1">test</div>
+            <!--<p id="pe3333" class="pe3333" style="position:absolute;left:10px;top:10px;" >3</p>-->
+            <!--<div draggable="true" id="abid1">test</div>-->
+        </div>
+        <div id="attributeDiv">
+            <span id="attributeTitle"></span>
+            <table>
+                <tr><td>宽度</td><td><input type="text" id="attributeWidth" /></td></tr>
+                <tr><td>高度</td><td><input type="text" id="attributeHegith" /></td></tr>
+                <tr><td>标题</td><td><input type="text" id="attributeLabelText" /></td></tr>
+                <tr><td>去除label</td><td><input type="checkbox" id="attributeRemoveLabel" /></td></tr>
+            </table>
+            <input type="button" value="应用" id="attributeSub" />
         </div>
 
 
-        <input type="text" id="text5" style="width:80px;" draggable="true" value="5" />
-        <input type="text" id="text6" style="width:80px;" draggable="true" value="6" />
-        <table draggable="true" id="t1">
-            <tr><td>123</td><td>123</td><td>123</td></tr>
-            <tr><td>123</td><td>123</td><td>123</td></tr>
-            <tr><td>123</td><td>123</td><td>123</td></tr>
-        </table>
     </div>
     <script type="text/javascript">
+
         window.onload = function () {
-            SetDragable.initMoveObj(document.getElementById("workspace"));
-            SetDragable.initDrgObj(document.getElementById("pe3"));
-            SetDragable.initDrgObj(document.getElementById("div2_1"));
-            SetDragable.initDrgObj(document.getElementById("label1"));
+
+            getObj("attributeSub").addEventListener("click", function (e) {
+                var obj = getObj(getObj("attributeTitle").innerHTML);
+                var ctr = obj.getAttribute("ctr")
+                var extObj = obj.ext || {};
+                if (ctr == "text") {
+                    if (extObj.labelText == undefined) {
+                        extObj.labelText = "label"
+                    }
+                    getChildren(obj, "toolsTextLabel").innerHTML = getObj("attributeLabelText").value;
+
+                    if (getObj("attributeRemoveLabel").checked) {
+                        getChildren(obj, "toolsTextLabel").style.display = "none";
+                    } else {
+                        getChildren(obj, "toolsTextLabel").style.display = "";
+                    }
+
+                }
+
+            }, true);
+
+            function getChildren(parentObj, childrenCtr) {
+                var returnObj = null;
+                for (var i = 0; i < parentObj.children.length; i++) {
+                    if (parentObj.children[i].getAttribute("ctr") == childrenCtr) {
+                        returnObj = parentObj.children[i];
+                    }
+                }
+                return returnObj;
+            }
+            SetDragable.initMoveObj(getObj("workspace"));
+            SetDragable.initDrgObj([
+                getObj("toolsLabel"),
+                getObj("toolsText"),
+                getObj("toolsSelect")
+            ]);
         };
+
         var SetDragable = (function () {
             /* 拖拽元素支持的事件
                  ondrag 应用于拖拽元素，整个拖拽过程都会调用
@@ -103,134 +183,134 @@
                  ondrop 应用于目标元素，当在目标元素上松开鼠标时调用
                  ondragleave 应用于目标元素，当鼠标离开目标元素时调用
              */
-
+            //画布
+            var MoveObj = null;
             var dragstart = function (e) {
                 /*通过dataTransfer来实现数据的存储与获取
                     setData(format, data)
                     format: 数据的类型： text/html  text/uri-list
                     Data: 数据： 一般来说是字符串值
                 */
-                // e.dataTransfer.setData("Text", e.target.id);
-                e.target.style.opacity = 0.5             
-                e.dataTransfer.setData("text", e.target.id );              
+                e.target.style.opacity = 0.5
+                e.target.ext = { "pageX": e.pageX, "pageY": e.pageY };
+                e.dataTransfer.setData("text", e.target.id);
+                var test = getpos(e.target);
                 console.log(e.target.id + "ondragstart")
+                console.log(e.pageX + "," + e.pageY);
             }
 
             var dragend = function (e) {
-                e.target.style.opacity = 1;            
+                e.target.style.opacity = 1;
                 console.log(e.target.id + "ondragend")
             }
 
             /*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
             var dragover = function (e) {
+
                 console.log(e.target.id + "ondragover")
                 e.preventDefault();
             }
 
             var drop = function (e) {
                 /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
-                var data = e.dataTransfer.getData("text")
-                //e.target.appendChild(document.getElementById(data));
-                var sourceNode = document.getElementById(data); // 获得被克隆的节点对象
-                var clonedNode = sourceNode.cloneNode(true); // 克隆节点
-                clonedNode.style.opacity = 1
-                var newid=uuid();
-                clonedNode.setAttribute("id", newid); // 修改一下id 值，避免id 重复
-                clonedNode.style.position = "absolute";
-                clonedNode.style.top = (e.offsetY- event.target.offsetTop)+"px"
-                clonedNode.style.left = (e.offsetX - event.target.offsetLeft) + "px"
-                e.target.appendChild(clonedNode);                
-                console.log(e.target.id + "ondrop")
+                var drgid = e.dataTransfer.getData("text");//被拖动的ID
+                var extData = getObj(drgid).ext;//扩展信息
+                var sourceNode = getObj(drgid); // 获得被克隆的节点对象
+                if (e.target == MoveObj) {
+                    //如果是画布里的对象在移动那就不创建
+                    var clonedNode
+                    if (sourceNode.parentElement == e.target) {
+                        clonedNode = sourceNode
+                    } else {
+                        clonedNode = sourceNode.cloneNode(true)// 克隆节点
+                        //初始化一下，这个对象才能移动
+                        initDrgObj([clonedNode])
+                        clonedNode.setAttribute("id", uuid()); // 修改一下id 值，避免id 重复
+                        clonedNode.style.position = "absolute";
+                    }
+                    clonedNode.style.opacity = 1
+                    //画布的border会影响定位
+                    var borderTopWidth = getComputedStyle(e.target, null).borderTopWidth.replace("px", "");
+                    var borderLeftWidth = getComputedStyle(e.target, null).borderLeftWidth.replace("px", "");
+                    var marginTop = getComputedStyle(sourceNode, null).marginTop.replace("px", "");
+                    //计算鼠标移动距离，然后将移动对象和画布对象位置算出
+                    clonedNode.style.top = (e.pageY - extData.pageY - (getpos(e.target).t - getpos(sourceNode).t) - borderTopWidth - marginTop) + "px"
+                    clonedNode.style.left = (e.pageX - extData.pageX - (getpos(e.target).l - getpos(sourceNode).l) - borderLeftWidth) + "px"
+                    e.target.appendChild(clonedNode);
+                    console.log(e.target.id + "ondrop")
+                    showAttribute(clonedNode.getAttribute("id"));
+                } else if (sourceNode == e.target) {//画布上的控件小范围移动
+                    sourceNode.style.top = (e.pageY - extData.pageY) + Number(sourceNode.style.top.replace("px", "")) + "px"
+                    sourceNode.style.left = (e.pageX - extData.pageX) + Number(sourceNode.style.left.replace("px", "")) + "px"
+                } else {//画布上的A控件移到B控件上，不能放进来，
+                    return false;
+                }
             }
+            //单击控件
+            var dragclick = function (e) {
+                //显示属性
+                showAttribute(e.target.getAttribute("id"));
+            }
+
+            //显示控件属性
+            var showAttribute = function (domID) {
+                getObj("attributeTitle").innerHTML = domID;
+            }
+
+
             var initMoveObj = function (moveObj) {
                 moveObj.addEventListener("dragover", dragover, true);
                 moveObj.addEventListener("drop", drop, true);
+                MoveObj = moveObj;
             }
 
-            var initDrgObj = function (drgObj) {
-                drgObj.draggable = true;
-                drgObj.style.cursor = "move";
-                //监听拖动事件
-                drgObj.addEventListener("dragstart", dragstart, true);
-                drgObj.addEventListener("dragend", dragend, true);
+            var initDrgObj = function (drgObjList) {
+                for (var i = 0; i < drgObjList.length; i++) {
+                    var drgObj = drgObjList[i];
+                    drgObj.draggable = true;
+                    drgObj.style.cursor = "move";
+                    //监听拖动事件
+                    drgObj.addEventListener("dragstart", dragstart, true);
+                    drgObj.addEventListener("dragend", dragend, true);
+                    drgObj.addEventListener("click", dragclick, true);
+                }
+            }
+
+            //获取坐标位置
+            var getpos = function (e) {
+                var t = e.offsetTop;
+                var l = e.offsetLeft;
+                var height = e.offsetHeight;
+                while (e = e.offsetParent) {
+                    t += e.offsetTop;
+                    l += e.offsetLeft;
+                }
+                return { "t": t, "l": l };
+            }
+            var uuid = function () {
+                var s = [];
+                var hexDigits = "0123456789abcdef";
+                for (var i = 0; i < 36; i++) {
+                    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+                }
+                s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+                s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+                s[8] = s[13] = s[18] = s[23] = "-";
+
+                var uuid = s.join("");
+                return uuid;
             }
             return {
                 initMoveObj: initMoveObj,
-                initDrgObj: initDrgObj
+                initDrgObj: initDrgObj,
+                MoveObj: MoveObj
             };
         })();
-
-
- 
-        //document.ondragstart = function (e) {
-        //    /*通过dataTransfer来实现数据的存储与获取
-        //        setData(format, data)
-        //        format: 数据的类型： text/html  text/uri-list
-        //        Data: 数据： 一般来说是字符串值
-        //    */
-        //    // e.dataTransfer.setData("Text", e.target.id);
-        //    e.target.style.opacity = 0.5
-        //    e.dataTransfer.setData("text", e.target.id);
-        //    //let off = { x: e.x - getLeft(e.target), y: e.y - getTop(e.target) };
-        //    console.log(e.target.id + "ondragstart")
-        //}
-
-        //document.ondragend = function (e) {
-        //    e.target.style.opacity = 1;
-        //    //let off = moveObj.dragOff;
-        //    //moveObj.style.top = e.y - off.y + "px";
-        //    //moveObj.style.left = e.x - off.x + "px";
-        //    console.log(e.target.id + "ondragend")
-        //}
-
-        ///*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
-        //document.ondragover = function (e) {
-        //    console.log(e.target.id + "ondragover")
-        //    e.preventDefault();
-        //}
-
-        //document.ondrop = function (e) {
-        //    /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
-        //    var data = e.dataTransfer.getData("text");
-        //    //e.target.appendChild(document.getElementById(data));
-
-        //    var sourceNode = document.getElementById(data); // 获得被克隆的节点对象
-        //    var clonedNode = sourceNode.cloneNode(true); // 克隆节点
-        //    clonedNode.style.opacity = 1
-        //    clonedNode.setAttribute("id", uuid()); // 修改一下id 值，避免id 重复
-        //    clonedNode.style.position = "absolute";
-        //    clonedNode.style.top = "10px;"
-        //    clonedNode.style.left = "10px;"
-        //    e.target.appendChild(clonedNode);
-
-        //    console.log(e.target.id + "ondrop")
-        //}
-
-        function getTop(e) {
-            var offset = e.offsetTop;
-            if (e.offsetParent != null) offset += getTop(e.offsetParent);
-            return offset;
-        }
-        //获取元素的横坐标,距离文档左边的宽度
-        function getLeft(e) {
-            var offset = e.offsetLeft;
-            if (e.offsetParent != null) offset += getLeft(e.offsetParent);
-            return offset;
+        function getObj(k) {
+            return document.getElementById(k);
         }
 
-        function uuid() {
-            var s = [];
-            var hexDigits = "0123456789abcdef";
-            for (var i = 0; i < 36; i++) {
-                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-            }
-            s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-            s[8] = s[13] = s[18] = s[23] = "-";
 
-            var uuid = s.join("");
-            return uuid;
-        }
     </script>
 </body>
 </html> 

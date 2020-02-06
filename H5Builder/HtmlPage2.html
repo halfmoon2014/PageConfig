@@ -93,22 +93,22 @@
             </div>
             <label id="label1" draggable="true">label1</label>
         </div>
-        <div id="div2" class="div2">
+        <!--<div id="div2" style="position:absolute;top:30px;left:310px;" class="div2">
             <div style="position:absolute;top:30px;left:30px;" draggable="true" id="abid1">test</div>
-        </div>
+        </div>-->
 
 
-        <input type="text" id="text5" style="width:80px;" draggable="true" value="5" />
+        <!--<input type="text" id="text5" style="width:80px;" draggable="true" value="5" />
         <input type="text" id="text6" style="width:80px;" draggable="true" value="6" />
         <table draggable="true" id="t1">
             <tr><td>123</td><td>123</td><td>123</td></tr>
             <tr><td>123</td><td>123</td><td>123</td></tr>
             <tr><td>123</td><td>123</td><td>123</td></tr>
-        </table>
+        </table>-->
     </div>
     <script>
         window.onload = function () {
-            setDragable(document.getElementById("pe3"), document.getElementById("contanin"))
+            setDragable("#pe3")
         }
         function setDragable(drg, mov) {
             let drgObj = drg;
@@ -130,7 +130,7 @@
             function dragstart(e) {
                 let off = { x: e.x - getLeft(moveObj), y: e.y - getTop(moveObj) };
                 moveObj.dragOff = off;
-            }++++++++++++++++++++++++++++++++++++++-+
+            } 
             //拖放结束
             function dragend(e) {
                 let off = moveObj.dragOff;
