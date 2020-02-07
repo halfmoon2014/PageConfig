@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <script src="js/tools.js"></script>
     <style>
         * {
             padding: 0;
@@ -56,17 +57,22 @@
         }
 
         .toolsTextCss {
-            height: 26px;    
+            height: 26px;
             background-color: rgb(133, 88, 29);
-            width:120px;
+            width: 120px;
         }
-        .toolsTextCss label{
-             width: 60px;
-             display:inline-block;
-        }
-        .toolsTextCss span{
-             width: 60px;display:inline-block;
-        }
+
+            .toolsTextCss label {
+                width: 60px;
+                display: inline-block;
+                background-color:aliceblue
+            }
+
+            .toolsTextCss span {
+                width: 60px;
+                display: inline-block;
+                background-color: aliceblue
+            }
 
         .toolsSelectCss {
             height: 26px;
@@ -132,18 +138,17 @@
     <script type="text/javascript">
 
         window.onload = function () {
-
-            getObj("attributeSub").addEventListener("click", function (e) {
-                var obj = getObj(getObj("attributeTitle").innerHTML);
+            tools.getObj("attributeSub").addEventListener("click", function (e) {
+                var obj = tools.getObj(tools.getObj("attributeTitle").innerHTML);
                 var ctr = obj.getAttribute("ctr")
                 var extObj = obj.ext || {};
                 if (ctr == "text") {
                     if (extObj.labelText == undefined) {
                         extObj.labelText = "label"
                     }
-                    getChildren(obj, "toolsTextLabel").innerHTML = getObj("attributeLabelText").value;
+                    getChildren(obj, "toolsTextLabel").innerHTML = tools.getObj("attributeLabelText").value;
 
-                    if (getObj("attributeRemoveLabel").checked) {
+                    if (tools.getObj("attributeRemoveLabel").checked) {
                         getChildren(obj, "toolsTextLabel").style.display = "none";
                     } else {
                         getChildren(obj, "toolsTextLabel").style.display = "";
@@ -153,23 +158,23 @@
 
             }, true);
 
-            function getChildren(parentObj, childrenCtr) {
-                var returnObj = null;
-                for (var i = 0; i < parentObj.children.length; i++) {
-                    if (parentObj.children[i].getAttribute("ctr") == childrenCtr) {
-                        returnObj = parentObj.children[i];
-                    }
-                }
-                return returnObj;
-            }
-            SetDragable.initMoveObj(getObj("workspace"));
+            SetDragable.initMoveObj(tools.getObj("workspace"));
             SetDragable.initDrgObj([
-                getObj("toolsLabel"),
-                getObj("toolsText"),
-                getObj("toolsSelect")
-            ]);
+                tools.getObj("toolsLabel"),
+                tools.getObj("toolsText"),
+                tools.getObj("toolsSelect")
+            ], showAttribute);
         };
 
+        function getChildren(parentObj, childrenCtr) {
+            var returnObj = null;
+            for (var i = 0; i < parentObj.children.length; i++) {
+                if (parentObj.children[i].getAttribute("ctr") == childrenCtr) {
+                    returnObj = parentObj.children[i];
+                }
+            }
+            return returnObj;
+        }
         var SetDragable = (function () {
             /* 拖拽元素支持的事件
                  ondrag 应用于拖拽元素，整个拖拽过程都会调用
@@ -185,6 +190,7 @@
              */
             //画布
             var MoveObj = null;
+            var ClickFun = null;
             var dragstart = function (e) {
                 /*通过dataTransfer来实现数据的存储与获取
                     setData(format, data)
@@ -194,7 +200,7 @@
                 e.target.style.opacity = 0.5
                 e.target.ext = { "pageX": e.pageX, "pageY": e.pageY };
                 e.dataTransfer.setData("text", e.target.id);
-                var test = getpos(e.target);
+                var test = tools.getpos(e.target);
                 console.log(e.target.id + "ondragstart")
                 console.log(e.pageX + "," + e.pageY);
             }
@@ -206,7 +212,6 @@
 
             /*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
             var dragover = function (e) {
-
                 console.log(e.target.id + "ondragover")
                 e.preventDefault();
             }
@@ -214,8 +219,8 @@
             var drop = function (e) {
                 /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
                 var drgid = e.dataTransfer.getData("text");//被拖动的ID
-                var extData = getObj(drgid).ext;//扩展信息
-                var sourceNode = getObj(drgid); // 获得被克隆的节点对象
+                var extData = tools.getObj(drgid).ext;//扩展信息
+                var sourceNode = tools.getObj(drgid); // 获得被克隆的节点对象
                 if (e.target == MoveObj) {
                     //如果是画布里的对象在移动那就不创建
                     var clonedNode
@@ -225,8 +230,11 @@
                         clonedNode = sourceNode.cloneNode(true)// 克隆节点
                         //初始化一下，这个对象才能移动
                         initDrgObj([clonedNode])
-                        clonedNode.setAttribute("id", uuid()); // 修改一下id 值，避免id 重复
+                        clonedNode.setAttribute("id", tools.uuid()); // 修改一下id 值，避免id 重复
                         clonedNode.style.position = "absolute";
+                        if (ClickFun != null) {
+                            clonedNode.addEventListener("click", ClickFun, true);                            
+                        }
                     }
                     clonedNode.style.opacity = 1
                     //画布的border会影响定位
@@ -234,82 +242,53 @@
                     var borderLeftWidth = getComputedStyle(e.target, null).borderLeftWidth.replace("px", "");
                     var marginTop = getComputedStyle(sourceNode, null).marginTop.replace("px", "");
                     //计算鼠标移动距离，然后将移动对象和画布对象位置算出
-                    clonedNode.style.top = (e.pageY - extData.pageY - (getpos(e.target).t - getpos(sourceNode).t) - borderTopWidth - marginTop) + "px"
-                    clonedNode.style.left = (e.pageX - extData.pageX - (getpos(e.target).l - getpos(sourceNode).l) - borderLeftWidth) + "px"
+                    clonedNode.style.top = (e.pageY - extData.pageY - (tools.getpos(e.target).t - tools.getpos(sourceNode).t) - borderTopWidth - marginTop) + "px"
+                    clonedNode.style.left = (e.pageX - extData.pageX - (tools.getpos(e.target).l - tools.getpos(sourceNode).l) - borderLeftWidth) + "px"
                     e.target.appendChild(clonedNode);
                     console.log(e.target.id + "ondrop")
-                    showAttribute(clonedNode.getAttribute("id"));
+                    //刚刚创建出来的对象，模拟单击一下
+                  
+                        clonedNode.click();
+                   
                 } else if (sourceNode == e.target) {//画布上的控件小范围移动
                     sourceNode.style.top = (e.pageY - extData.pageY) + Number(sourceNode.style.top.replace("px", "")) + "px"
                     sourceNode.style.left = (e.pageX - extData.pageX) + Number(sourceNode.style.left.replace("px", "")) + "px"
                 } else {//画布上的A控件移到B控件上，不能放进来，
                     return false;
                 }
-            }
-            //单击控件
-            var dragclick = function (e) {
-                //显示属性
-                showAttribute(e.target.getAttribute("id"));
-            }
-
-            //显示控件属性
-            var showAttribute = function (domID) {
-                getObj("attributeTitle").innerHTML = domID;
-            }
-
-
+            }          
             var initMoveObj = function (moveObj) {
                 moveObj.addEventListener("dragover", dragover, true);
                 moveObj.addEventListener("drop", drop, true);
                 MoveObj = moveObj;
             }
 
-            var initDrgObj = function (drgObjList) {
+            //fn 新创建出来的对象的单击事件
+            var initDrgObj = function (drgObjList, fn) {
+                if (typeof fn == "function")
+                    ClickFun = fn
                 for (var i = 0; i < drgObjList.length; i++) {
                     var drgObj = drgObjList[i];
                     drgObj.draggable = true;
                     drgObj.style.cursor = "move";
                     //监听拖动事件
                     drgObj.addEventListener("dragstart", dragstart, true);
-                    drgObj.addEventListener("dragend", dragend, true);
-                    drgObj.addEventListener("click", dragclick, true);
+                    drgObj.addEventListener("dragend", dragend, true);                   
                 }
             }
 
-            //获取坐标位置
-            var getpos = function (e) {
-                var t = e.offsetTop;
-                var l = e.offsetLeft;
-                var height = e.offsetHeight;
-                while (e = e.offsetParent) {
-                    t += e.offsetTop;
-                    l += e.offsetLeft;
-                }
-                return { "t": t, "l": l };
-            }
-            var uuid = function () {
-                var s = [];
-                var hexDigits = "0123456789abcdef";
-                for (var i = 0; i < 36; i++) {
-                    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-                }
-                s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-                s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-                s[8] = s[13] = s[18] = s[23] = "-";
-
-                var uuid = s.join("");
-                return uuid;
-            }
+  
             return {
                 initMoveObj: initMoveObj,
                 initDrgObj: initDrgObj,
                 MoveObj: MoveObj
             };
         })();
-        function getObj(k) {
-            return document.getElementById(k);
-        }
 
+        //显示控件属性
+        var showAttribute = function (e) {
+            tools.getObj("attributeTitle").innerHTML = e.target.id;
+        }
 
     </script>
 </body>
