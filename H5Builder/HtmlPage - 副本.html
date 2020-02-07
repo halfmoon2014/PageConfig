@@ -65,14 +65,13 @@
             .toolsTextCss label {
                 width: 60px;
                 display: inline-block;
-                background-color: #9f9ba7;
-                margin-top:3px;
+                background-color:aliceblue
             }
 
             .toolsTextCss span {
                 width: 60px;
                 display: inline-block;
-                background-color: #716d62;
+                background-color: aliceblue
             }
 
         .toolsSelectCss {
@@ -202,38 +201,31 @@
                 e.target.ext = { "pageX": e.pageX, "pageY": e.pageY };
                 e.dataTransfer.setData("text", e.target.id);
                 var test = tools.getpos(e.target);
-                console.log(e.target.id + "|ondragstart")
+                console.log(e.target.id + "ondragstart")
                 console.log(e.pageX + "," + e.pageY);
             }
 
             var dragend = function (e) {
                 e.target.style.opacity = 1;
-                console.log(e.target.id + "|ondragend")
+                console.log(e.target.id + "ondragend")
             }
 
             /*浏览器默认会阻止ondrop事件：我们必须在ondrapover中阻止默认行为*/
             var dragover = function (e) {
-                console.log(e.target.id + "|ondragover")
-                //if (e.target.getAttribute("ctr") == "toolsTextText")
-                //    return
+                console.log(e.target.id + "ondragover")
                 e.preventDefault();
             }
 
             var drop = function (e) {
-                /*对于drop,防止浏览器的默认处理数据(在drop中链接是默认打开)*/
-                event.preventDefault();
                 /*通过e.dataTransfer.setData存储的数据，只能在drop事件中获取*/
                 var drgid = e.dataTransfer.getData("text");//被拖动的ID
                 var extData = tools.getObj(drgid).ext;//扩展信息
                 var sourceNode = tools.getObj(drgid); // 获得被克隆的节点对象
-                // if (e.target != MoveObj) return true;
                 if (e.target == MoveObj) {
                     //如果是画布里的对象在移动那就不创建
-                    var clonedNode;
+                    var clonedNode
                     if (sourceNode.parentElement == e.target) {
-                        clonedNode = sourceNode;
-                        sourceNode.style.top = (e.pageY - extData.pageY) + Number(sourceNode.style.top.replace("px", "")) + "px"
-                        sourceNode.style.left = (e.pageX - extData.pageX) + Number(sourceNode.style.left.replace("px", "")) + "px"
+                        clonedNode = sourceNode
                     } else {
                         clonedNode = sourceNode.cloneNode(true)// 克隆节点
                         //初始化一下，这个对象才能移动
@@ -241,33 +233,30 @@
                         clonedNode.setAttribute("id", tools.uuid()); // 修改一下id 值，避免id 重复
                         clonedNode.style.position = "absolute";
                         if (ClickFun != null) {
-                            clonedNode.addEventListener("click", ClickFun, true);
+                            clonedNode.addEventListener("click", ClickFun, true);                            
                         }
-                        //画布的border会影响定位
-                        var borderTopWidth = getComputedStyle(e.target, null).borderTopWidth.replace("px", "");
-                        clonedNode.style.opacity = 1
-                        //画布的border会影响定位                    
-                        var borderLeftWidth = getComputedStyle(e.target, null).borderLeftWidth.replace("px", "");
-                        var marginTop = getComputedStyle(sourceNode, null).marginTop.replace("px", "");
-                        //计算鼠标移动距离，然后将移动对象和画布对象位置算出
-                        clonedNode.style.top = (e.pageY - extData.pageY - (tools.getpos(e.target).t - tools.getpos(sourceNode).t) - borderTopWidth - marginTop) + "px"
-                        clonedNode.style.left = (e.pageX - extData.pageX - (tools.getpos(e.target).l - tools.getpos(sourceNode).l) - borderLeftWidth) + "px"
-                        e.target.appendChild(clonedNode);
-                        console.log(e.target.id + "|ondrop|e.target == MoveObj")
-                        //刚刚创建出来的对象，模拟单击一下
                     }
-              
-
-                    clonedNode.click();
-
-                } else {
+                    clonedNode.style.opacity = 1
+                    //画布的border会影响定位
+                    var borderTopWidth = getComputedStyle(e.target, null).borderTopWidth.replace("px", "");
+                    var borderLeftWidth = getComputedStyle(e.target, null).borderLeftWidth.replace("px", "");
+                    var marginTop = getComputedStyle(sourceNode, null).marginTop.replace("px", "");
+                    //计算鼠标移动距离，然后将移动对象和画布对象位置算出
+                    clonedNode.style.top = (e.pageY - extData.pageY - (tools.getpos(e.target).t - tools.getpos(sourceNode).t) - borderTopWidth - marginTop) + "px"
+                    clonedNode.style.left = (e.pageX - extData.pageX - (tools.getpos(e.target).l - tools.getpos(sourceNode).l) - borderLeftWidth) + "px"
+                    e.target.appendChild(clonedNode);
+                    console.log(e.target.id + "ondrop")
+                    //刚刚创建出来的对象，模拟单击一下
+                  
+                        clonedNode.click();
+                   
+                } else if (sourceNode == e.target) {//画布上的控件小范围移动
                     sourceNode.style.top = (e.pageY - extData.pageY) + Number(sourceNode.style.top.replace("px", "")) + "px"
                     sourceNode.style.left = (e.pageX - extData.pageX) + Number(sourceNode.style.left.replace("px", "")) + "px"
-                    sourceNode.click();
-                    //return false;
-                    console.log(e.target.id + "|ondrop|return false;")
+                } else {//画布上的A控件移到B控件上，不能放进来，
+                    return false;
                 }
-            }
+            }          
             var initMoveObj = function (moveObj) {
                 moveObj.addEventListener("dragover", dragover, true);
                 moveObj.addEventListener("drop", drop, true);
@@ -284,11 +273,11 @@
                     drgObj.style.cursor = "move";
                     //监听拖动事件
                     drgObj.addEventListener("dragstart", dragstart, true);
-                    drgObj.addEventListener("dragend", dragend, true);
+                    drgObj.addEventListener("dragend", dragend, true);                   
                 }
             }
 
-
+  
             return {
                 initMoveObj: initMoveObj,
                 initDrgObj: initDrgObj,
