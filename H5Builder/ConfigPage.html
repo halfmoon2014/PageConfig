@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/tools.js"></script>
+    <script src="js/SetDragable.js"></script>
+    <link href="css/ConfigPage/m.css" rel="stylesheet" />
+    <script src="js/ConfigPage/m.js"></script>
+</head>
+<body>
+    <div id="worker">
+        <div id="titles">titles</div>
+        <div id="tools">
+            <!-- 在h5中，如果想拖拽元素，就必须为元素添加draggable="true"。图片和超链接默认就可以拖拽 -->
+            <div>
+                <div id="toolsLabelModel" class="toolsModelCss" ctr="label">
+                    <label subctr="label">label</label>
+                </div>
+            </div>
+            <div>
+                <div id="toolsTextModel" class="toolsModelCss" ctr="text">
+                    <label subctr="label">label</label><span subctr="text">文本框</span>
+                </div>
+            </div>
+            <div>
+                <div id="toolsSelectModel" class="toolsModelCss" ctr="select">
+                    <label subctr="label">label</label><span subctr="select">下拉框</span>
+                </div>
+            </div>
+            <div>
+                <div id="toolsTableModel" class="toolsModelCss" ctr="table">
+                    <label subctr="table">table</label>
+                </div>
+            </div>
+
+            <div>
+                <div id="toolsButtonModel" class="toolsModelCss" ctr="button">
+                    <label subctr="button">button</label>
+                </div>
+            </div>
+            <div>
+                <div id="toolsDateModel" class="toolsModelCss" ctr="date">
+                    <label subctr="label">label</label><span subctr="date">日期</span>
+                </div>
+            </div>
+            <div>
+                <div id="toolsImageModel" class="toolsModelCss" ctr="image">
+                    <label subctr="image">image</label>
+                </div>
+            </div>
+        </div>
+        <div id="workspace">
+
+        </div>
+        <div id="attributeDiv">
+            <span id="attributeTitle"></span>
+            <table>
+                <tr><td>宽度</td><td><input type="text" id="attributeWidth" /></td></tr>
+                <tr><td>高度</td><td><input type="text" id="attributeHegith" /></td></tr>
+                <tr><td>标题</td><td><input type="text" id="attributeLabelText" /></td></tr>
+                <tr><td>去除label</td><td><input type="checkbox" id="attributeRemoveLabel" /></td></tr>
+            </table>
+            <input type="button" value="应用" id="attributeSub" />
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/html" id="tableScriptModal">
+    <table subctr="table" class="tableScriptModalCss">
+        <tr><td>title1</td><td>title2</td><td>title3</td><td>title4</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </table>
+</script>

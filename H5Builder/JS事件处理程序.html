@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS事件处理程序</title>
+    <link href="https://cdn.bootcss.com/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper" id="wrapper">
+        <div class="container" id="test" style="background-color:rebeccapurple;height:150px;">
+            <label id="event">JS事件处理程序</label>
+        </div>
+    </div>
+
+    <script>
+        var wrapper = document.getElementById("wrapper"),
+            eventdd = document.getElementById("event");
+        function test(e) {
+            console.log(e.target.id);
+        }
+        wrapper.addEventListener("click", test, true)
+       // eventdd.addEventListener("click", test, true)
+        //event.addEventListener("click", function () {
+        //    alert("2");
+        //    console.log("2");
+        //}, true)
+        //wrapper.addEventListener("click", function () {
+        //    alert("3");
+        //    console.log("3");
+        //}, false)
+        //event.addEventListener("click", function () {
+        //    alert("4");
+        //    console.log("4");
+        //}, false)
+    </script>
+</body>
+
+</html>
