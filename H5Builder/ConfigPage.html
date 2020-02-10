@@ -55,11 +55,21 @@
         </div>
         <div id="attributeDiv">
             <span id="attributeTitle"></span>
-            <table>
+            <table id="attributeTable">
                 <tr><td>宽度</td><td><input type="text" id="attributeWidth" /></td></tr>
                 <tr><td>高度</td><td><input type="text" id="attributeHegith" /></td></tr>
                 <tr><td>标题</td><td><input type="text" id="attributeLabelText" /></td></tr>
-                <tr><td>去除label</td><td><input type="checkbox" id="attributeRemoveLabel" /></td></tr>
+                <tr>
+                    <td>label</td>
+                    <td>
+                        <input name="attributeRemoveLabel" value="on" type="radio" />显示
+                        <input name="attributeRemoveLabel" value="off" type="radio" />隐藏
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">水平联动<input type="checkbox" id="horizontalMove" />&nbsp;垂直联动<input type="checkbox" id="verticalMove" /></td>                    
+                </tr>
+              
             </table>
             <input type="button" value="应用" id="attributeSub" />
         </div>
@@ -69,9 +79,9 @@
 <script type="text/html" id="tableScriptModal">
     <table subctr="table" class="tableScriptModalCss">
         <tr><td>title1</td><td>title2</td><td>title3</td><td>title4</td></tr>
-        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td></tr>
     </table>
 </script>

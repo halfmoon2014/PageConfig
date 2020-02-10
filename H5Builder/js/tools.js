@@ -2,6 +2,11 @@
     function getObj(k) {
         return document.getElementById(k);
     }
+
+    function getName(k) {
+        return document.getElementsByName(k);
+    }
+
     //获取坐标位置
     var getpos = function (e) {
         var t = e.offsetTop;
@@ -28,6 +33,7 @@
     }
     return {
         getObj: getObj,
+        getName:getName,
         getpos: getpos,
         uuid: uuid
     };

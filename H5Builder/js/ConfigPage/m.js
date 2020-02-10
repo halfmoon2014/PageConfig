@@ -8,27 +8,65 @@ window.onload = function () {
             //if (extObj.labelText == undefined) {
             //    extObj.labelText = "label"
             //}
-            getChildren(obj, "label").innerHTML = tools.getObj("attributeLabelText").value;
+            getChildren(obj, "label").innerHTML = tools.getObj("attributeLabelText").value;            
+        }
 
-            if (tools.getObj("attributeRemoveLabel").checked) {
+    }, true);
+
+    tools.getObj("attributeTable").addEventListener("click", function (e) {
+        var obj = tools.getObj(tools.getObj("attributeTitle").innerHTML);
+        if ("attributeRemoveLabel" == e.target.name) {//点击了label显示、隐藏属性
+            if (e.target.value=="off") {
                 getChildren(obj, "label").style.display = "none";
             } else {
                 getChildren(obj, "label").style.display = "";
             }
         }
-
+        console.log(e.target)
     }, true);
+
     //初始化移动控件
+    var clonedHandler = {};
+    clonedHandler.init = clonedInit;
+    clonedHandler.move = cloneMove
     SetDragable.initMoveObj(tools.getObj("workspace"));
     SetDragable.initDrgObj([
         tools.getObj("toolsLabelModel"),
         tools.getObj("toolsTextModel"),
         tools.getObj("toolsSelectModel"), tools.getObj("toolsTableModel"), tools.getObj("toolsButtonModel"), tools.getObj("toolsDateModel"),
         tools.getObj("toolsImageModel")
-    ], clonedInit);
+    ], clonedHandler);
     //加载数据
     //SetDragable.loadData();
 };
+
+//控件移动后
+//sourceNode移动的对象(位置已经移动),pointOrg原位置,
+var cloneMove = function (sourceNode, pointOrg) {
+    var workspace = tools.getObj("workspace");
+    var moveList = new Array();
+    for (var i = 0; i < workspace.children.length; i++) {
+        if (workspace.children[i].getAttribute("ctr") && workspace.children[i]!=sourceNode) {
+            if (tools.getObj("horizontalMove").checked) {//水平联动
+                if (pointOrg.y == workspace.children[i].offsetTop) {
+                    moveList.push(workspace.children[i]);
+                }
+            }
+            if (tools.getObj("verticalMove").checked) {//垂直联动
+                if (pointOrg.x == workspace.children[i].offsetLeft) {
+                    moveList.push(workspace.children[i]);
+                }
+            }
+        }
+    }
+    if (moveList.length > 0) {
+        for (var i = 0; i < moveList.length; i++) {
+            moveList[i].style.top = moveList[i].offsetTop + sourceNode.offsetTop - pointOrg.y + "px";
+            moveList[i].style.left = moveList[i].offsetLeft + sourceNode.offsetLeft - pointOrg.x + "px";
+        }
+    }
+}
+//创建控件后执行
 var clonedInit = function (clonedNode) {
     //加载单击事件
     clonedNode.addEventListener("click", showAttribute, true);
