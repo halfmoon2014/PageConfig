@@ -14,7 +14,7 @@ class Complie{
             if(/\{\{(.*)\}\}/.test(child.outerHTML)){
                 let key = RegExp.$1.trim()
                 Observer.target= new Watcher(child,key);
-                this.vm[key];
+                this.vm[key];//触发get
                 Observer.target=null;
                 
                 //第一次初始化替换页面值

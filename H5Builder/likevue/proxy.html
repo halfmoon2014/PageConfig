@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../likeVue/jquery.js"></script>
+</head>
+<body>
+    <input type="text" id="ypzlbh" />
+    <input type="text" id="tz_id" />
+    <div id="detail">
+        <table>
+            <tr><td>name</td><td>age</td></tr>
+
+        </table>
+
+    </div>
+
+    <div id="detail2"></div>
+
+</body>
+</html>
+<script type="text/javascript">
+
+    class MvvM {
+        constructor({
+            data,
+            dataSet,
+            dataBind
+        }) {
+            //this.data = data;
+            this.dataSet = dataSet;
+            this.data = this.defineData(data, function () { dataBind() });
+        }
+
+        defineData(data, call) {
+            var obj = new Proxy(data, {
+                get: (target, key, receiver) => {
+                    console.log(`getting ${key}!`);
+                    return Reflect.get(target, key, receiver);
+                },
+                set: (target, key, value, receiver) => {
+                    console.log(`setting ${key}!`);
+                    this.dataSet[key](value);
+                    return Reflect.set(target, key, value, receiver);
+                }
+            });
+
+            console.log(data)
+            call();
+            return obj
+        }
+        /**
+         * 重新定义data,通过set实现数据劫持，同时更新关联的dom数据
+         * @param {*} data
+         */
+        //defineData(data,call) {
+        //    Object.keys(data).forEach(item => {
+
+        //        Object.defineProperty(this, item, {
+        //            configurable: false,
+        //            enumerable: true,
+        //            get: function () {
+        //                return this.data[item];
+        //            },
+        //            set: function (val) {
+        //                this.data[item] = val;
+        //                this.dataSet[item](val);
+        //                console.log(val,item)
+        //            }
+
+        //        })
+        //    })
+        //    call();
+
+        //}
+    }
+
+    //function createArray(...elements) {
+    //    let handler = {
+    //        get(target, propKey, receiver) {
+    //            let index = Number(propKey);
+    //            if (index < 0) {
+    //                propKey = String(target.length + index);
+    //            }
+    //            return Reflect.get(target, propKey, receiver);
+    //        }, set: function (target, key, value, receiver) {
+    //            console.log(`setting ${key}!`);
+    //            return Reflect.set(target, key, value, receiver);
+    //        }
+    //    };
+
+    //    let target = [];
+    //    target.push(...elements);
+    //    return new Proxy(target, handler);
+    //}
+
+    window.onload = function () {
+
+        window.vm = new MvvM({
+            data: {
+                ypzlbh: '',
+                table: [
+
+                ]
+            },
+            dataSet: {
+                ypzlbh: function (val) {
+                    getObj("ypzlbh").value = val;
+                    getObj("tz_id").value = val;
+                    (typeof addRow2 == "'function'") && addRow2('ghsmc');
+                }
+            },
+            dataBind: function () {
+                //事件绑定
+                //$("#ypzlbh").change(function () {
+                //    window.vm.ypzlbh = getObj("ypzlbh").value;
+                //    console.log(getObj("ypzlbh").value,this)
+                //});
+                console.log('call')
+                $("#ypzlbh").keyup(function () {
+                    window.vm.data.ypzlbh = getObj("ypzlbh").value;
+                    console.log(getObj("ypzlbh").value, this)
+                });
+            }
+        })
+        //window.vm.data.ypzlbh = "defa"
+        window.vm.data.table.push({ xlid: 0, czbs: 0, xz: 0, ghsmc: 0, tgpl: 0, ypzlbh: 0, hsdx: 0, dxmc: 0 })
+
+        window.sum = new Proxy(sum, twice);
+        sum(1,2)
+        //proxy(1, 2) // 6
+        //proxy.call(null, 5, 6) // 22
+        //proxy.apply(null, [7, 8]) // 30
+
+    }
+
+    var twice = {
+        apply(target, ctx, args) {
+            console.log(Reflect.apply(...arguments) * 2)
+            return Reflect.apply(...arguments) * 2;
+        }
+    }
+
+    function sum(left, right) {
+        return left + right;
+    }
+
+
+
+    function getObj(id) {
+        return document.getElementById(id)
+    }
+</script>

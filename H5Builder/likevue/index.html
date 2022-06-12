@@ -8,27 +8,67 @@
 </head>
 <body>
     <div id='my-vue'>
-     <div>{{testData}}</div>  
-     <div>{{testData}}</div> 
-     <div>{{name}}</div> 
-        <div>
-            <span>
-                <span>{{name}}</span>
-            </span>
-        </div>
+        <div>{{testData}}</div>
+        <div>{{name}}</div>
+        <div>{{name}}</div>
+
     </div>
+    <div id="detail"></div>
+
+    <div id="detail2"></div>
+
 </body>
 <script src="Watcher.js"></script>
 <script src="Observer.js"></script>
 <script src="Complie.js"></script>
 <script src="MvvM.js"></script>
+<script src="Detail.js"></script>
 <script>
  var vm=new MvvM({
      el:'#my-vue',
      data:{
          testData:'testData数据',
-         name:'我是初始name',
+         name: '我是初始name',
+         item: {
+             age:12
+         }
      }
  })
+    window.onload = function () {
+        abc=new Detail({
+            dom: document.getElementById("detail"),
+            data: {
+                div: "hi",
+                button: "what",
+                list: [
+                    {
+                        "age": 12,
+                        "name": "zs",
+                        "title":"t1"
+                    },
+                    {
+                        "age": 13,
+                        "name": "ls",
+                        "title": "t2"
+                    }
+                ]
+            },
+            btuCall: () => {
+                abc.div = "123";
+            }
+        })
+
+        abc2 = new Detail({
+            dom: document.getElementById("detail2"),
+            data: {
+                div: "hi2",
+                button: "what2",
+                list:[]
+            },
+            btuCall: () => {
+                abc2.div = "333";
+            }
+        })
+    }
 </script>
 </html>
