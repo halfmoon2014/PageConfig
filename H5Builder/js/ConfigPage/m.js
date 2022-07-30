@@ -33,7 +33,10 @@ window.onload = function () {
     SetDragable.initDrgObj([
         tools.getObj("toolsLabelModel"),
         tools.getObj("toolsTextModel"),
-        tools.getObj("toolsSelectModel"), tools.getObj("toolsTableModel"), tools.getObj("toolsButtonModel"), tools.getObj("toolsDateModel"),
+        tools.getObj("toolsSelectModel"), 
+        tools.getObj("toolsTableModel"), 
+        tools.getObj("toolsButtonModel"), 
+        tools.getObj("toolsDateModel"),
         tools.getObj("toolsImageModel")
     ], clonedHandler);
     //加载数据
